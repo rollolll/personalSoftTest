@@ -4,6 +4,7 @@ import com.btg.fondos_api.dto.*;
 import com.btg.fondos_api.exception.ErrorGenericoException;
 import com.btg.fondos_api.exception.RecursoNoEncontradoException;
 import com.btg.fondos_api.mapper.FondoMapper;
+import com.btg.fondos_api.notification.INotificacionService;
 import com.btg.fondos_api.persistence.model.ClienteModel;
 import com.btg.fondos_api.persistence.model.FondoModel;
 import com.btg.fondos_api.persistence.repository.ClienteRepository;
@@ -12,12 +13,14 @@ import com.btg.fondos_api.service.IFondoService;
 import com.btg.fondos_api.service.ISuscripcionService;
 import com.btg.fondos_api.service.ITransaccionService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 
+@Slf4j
 @Service
 public class FondosService implements IFondoService {
 
@@ -26,15 +29,17 @@ public class FondosService implements IFondoService {
     private final ClienteRepository clienteRepository;
     private final ITransaccionService iTransaccionService;
     private final ISuscripcionService iSuscripcionService;
+    private final INotificacionService iNotificacionService;
 
     public FondosService(FondoRepository fondoRepository, FondoMapper fondoMapper,
                          ClienteRepository clienteRepository,
-                         ITransaccionService iTransaccionService, ISuscripcionService iSuscripcionService) {
+                         ITransaccionService iTransaccionService, ISuscripcionService iSuscripcionService, INotificacionService iNotificacionService) {
         this.fondoRepository = fondoRepository;
         this.fondoMapper = fondoMapper;
         this.clienteRepository = clienteRepository;
         this.iTransaccionService = iTransaccionService;
         this.iSuscripcionService = iSuscripcionService;
+        this.iNotificacionService = iNotificacionService;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class FondosService implements IFondoService {
         ApiResponseDto<SuscripcionDto> resultadoSuscripcion = iSuscripcionService.ejecutarSuscripcion(cliente, fondo);
 
         if (!resultadoSuscripcion.getCodigoResultado().equals(HttpStatus.OK.value())) {
-            throw new ErrorGenericoException("Fallo al realizar la suscripcion");
+            throw new ErrorGenericoException(ConstantesAplicacion.ERROR_SUSCRIPCION_FONDO);
         }
 
         try {
@@ -76,10 +81,16 @@ public class FondosService implements IFondoService {
             iSuscripcionService.eliminarSuscripcion(resultadoSuscripcion.getObjeto().getId());
         }
 
+        switch (cliente.getPreferenciaNotificacion().toUpperCase()) {
+            case ConstantesAplicacion.SMS -> iNotificacionService.enviarSms(cliente.getTelefono(), fondo.getNombre());
+            case ConstantesAplicacion.EMAIL -> iNotificacionService.enviarEmail(cliente.getEmail(), fondo.getNombre());
+            default -> log.warn(ConstantesAplicacion.SIN_PREFERENCIA_NOTIFICACION, cliente.getPreferenciaNotificacion());
+        }
+
         return ApiResponseDto.builder()
                 .error(false)
                 .codigoResultado(HttpStatus.OK.value())
-                .mensaje("Suscripcion Exitosa")
+                .mensaje(ConstantesAplicacion.EXITOSO_SUSCRIPCION)
                 .build();
     }
 
@@ -87,10 +98,10 @@ public class FondosService implements IFondoService {
         return RegistrarTransaccionDto.builder()
                 .clienteId(fondoRequest.getIdCliente())
                 .fondoId(fondoRequest.getIdFondo())
-                .tipo("APORTE")
+                .tipo(ConstantesAplicacion.APORTE)
                 .monto(fondo.getMontoMinimo())
                 .fecha(Instant.now())
-                .descripcion("Suscripcion a fondo")
+                .descripcion(ConstantesAplicacion.DESCRIPCION_SUSCRIPCION_FONDO)
                 .build();
     }
 }

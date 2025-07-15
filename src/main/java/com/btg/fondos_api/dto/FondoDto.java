@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,7 +14,7 @@ import lombok.Setter;
 public class FondoDto {
     private String id;
     private String nombre;
-    private String montoMinimo;
+    private BigDecimal montoMinimo;
     private String categoria;
 
 }

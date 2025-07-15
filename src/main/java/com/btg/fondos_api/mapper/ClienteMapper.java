@@ -10,5 +10,6 @@ import java.util.List;
 public interface ClienteMapper {
 
     ClienteDto toDto(ClienteModel cliente);
+    ClienteModel toModel(ClienteDto cliente);
     List<ClienteDto> toDtoList(List<ClienteModel> clientes);
 }

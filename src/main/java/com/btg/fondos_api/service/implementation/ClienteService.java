@@ -2,6 +2,7 @@ package com.btg.fondos_api.service.implementation;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.exception.ErrorGenericoException;
 import com.btg.fondos_api.exception.RecursoNoEncontradoException;
 import com.btg.fondos_api.mapper.ClienteMapper;
 import com.btg.fondos_api.persistence.model.ClienteModel;
@@ -11,6 +12,7 @@ import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,7 +29,7 @@ public class ClienteService implements IClienteService {
     @Override
     public ApiResponseDto obtenerClientes() {
         List<ClienteModel> clientes = clienteRepository.findAll();
-        if (clientes.isEmpty()){
+        if (clientes.isEmpty()) {
             throw new RecursoNoEncontradoException(ConstantesAplicacion.ERROR_NO_SE_ENCUENTRAN_CLIENTES);
         }
         List<ClienteDto> clienteMap = clienteMapper.toDtoList(clientes);
@@ -36,5 +38,21 @@ public class ClienteService implements IClienteService {
                 .codigoResultado(HttpStatus.OK.value())
                 .objeto(clienteMap)
                 .build();
+    }
+
+    @Override
+    public ApiResponseDto crearCliente(ClienteDto cliente) {
+        try {
+            ClienteModel model = clienteMapper.toModel(cliente);
+            model.setSaldo(BigDecimal.valueOf(500000));
+            clienteRepository.save(model);
+            return ApiResponseDto.builder()
+                    .error(false)
+                    .codigoResultado(HttpStatus.OK.value())
+                    .mensaje(ConstantesAplicacion.EXITOSO_CLIENTE)
+                    .build();
+        } catch (ErrorGenericoException e) {
+            throw new ErrorGenericoException(ConstantesAplicacion.ERROR_CREAR_CLIENTE);
+        }
     }
 }

@@ -4,10 +4,9 @@ import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.ClienteDto;
 import com.btg.fondos_api.service.IClienteService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +28,10 @@ public class ClienteController {
     @GetMapping(ConstantesAplicacion.PATH_OBTENER_CLIENTE)
     public ResponseEntity<ApiResponseDto<List<ClienteDto>>> obtenerTodos() {
         return ResponseEntity.ok(this.iClienteService.obtenerClientes());
+    }
+
+    @PostMapping(ConstantesAplicacion.PATH_CREAR_CLIENTE)
+    public ResponseEntity<ApiResponseDto> crearCliente(@Valid @RequestBody ClienteDto cliente) {
+        return ResponseEntity.ok(this.iClienteService.crearCliente(cliente));
     }
 }

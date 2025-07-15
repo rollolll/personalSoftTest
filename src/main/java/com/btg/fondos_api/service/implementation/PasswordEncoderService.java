@@ -15,5 +15,4 @@ public class PasswordEncoderService implements IPasswordEncoderService {
     public String encode(String rawPassword) {
         return encoder.encode(rawPassword);
     }
-
 }

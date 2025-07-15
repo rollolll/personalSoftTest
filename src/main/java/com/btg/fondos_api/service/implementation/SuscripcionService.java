@@ -12,6 +12,7 @@ import com.btg.fondos_api.persistence.repository.ClienteRepository;
 import com.btg.fondos_api.persistence.repository.SuscripcionRepository;
 import com.btg.fondos_api.persistence.repository.TransaccionRepository;
 import com.btg.fondos_api.service.ISuscripcionService;
+import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,18 +33,19 @@ public class SuscripcionService implements ISuscripcionService {
     @Override
     public ApiResponseDto<SuscripcionDto> ejecutarSuscripcion(ClienteModel cliente, FondoModel fondo) {
 
-        if (Objects.isNull(cliente)||Objects.isNull(fondo)){
-            throw new CondicionFallidaException("Error al procesar la suscripcion");
+        if (Objects.isNull(cliente) || Objects.isNull(fondo)) {
+            throw new CondicionFallidaException(ConstantesAplicacion.ERROR_PROCESAR_SUSCRIPCION);
         }
 
         if (cliente.getSaldo().compareTo(fondo.getMontoMinimo()) < 0) {
             throw new CondicionFallidaException(String.format(
-                    "No tiene saldo disponible para vincularse al fondo <%s>", fondo.getNombre()));
+                    ConstantesAplicacion.ERROR_SIN_SALDO, fondo.getNombre()));
         }
-        Optional<SuscripcionModel> validacionExistente = suscripcionRepository.findByClienteIdAndFondoIdAndActiva(cliente.getId(), fondo.getId(),true);
-        if (validacionExistente.isPresent()){
+        Optional<SuscripcionModel> validacionExistente = suscripcionRepository.findByClienteIdAndFondoIdAndActiva(
+                cliente.getId(), fondo.getId(), true);
+        if (validacionExistente.isPresent()) {
             throw new CondicionFallidaException(String.format(
-                    "Ya tiene una suscripcion al fondo <%s>", fondo.getNombre()));
+                    ConstantesAplicacion.ERROR_SUSCRIPCION_ACTIVA, fondo.getNombre()));
         }
 
         SuscripcionModel nuevaSuscripcion = SuscripcionModel.builder()
@@ -71,7 +73,7 @@ public class SuscripcionService implements ISuscripcionService {
         return ApiResponseDto.<SuscripcionDto>builder()
                 .error(false)
                 .codigoResultado(HttpStatus.OK.value())
-                .mensaje("Suscripción realizada correctamente.")
+                .mensaje(ConstantesAplicacion.EXITOSO_SUSCRIPCION)
                 .objeto(suscripcionDto)
                 .build();
     }
@@ -109,8 +111,8 @@ public class SuscripcionService implements ISuscripcionService {
                 .clienteId(idCliente)
                 .fondoId(suscripcion.getFondoId())
                 .monto(monto)
-                .tipo("ESTORNO_SUSCRIPCION")
-                .descripcion("Reverso automático de la suscripción fallida")
+                .tipo(ConstantesAplicacion.ACREDITACION)
+                .descripcion(ConstantesAplicacion.ERROR_REVERSO_SALDO)
                 .build();
 
         transaccionRepository.save(estorno);
@@ -118,7 +120,7 @@ public class SuscripcionService implements ISuscripcionService {
         return ApiResponseDto.<Void>builder()
                 .error(false)
                 .codigoResultado(HttpStatus.OK.value())
-                .mensaje("La suscripción fue eliminada correctamente.")
+                .mensaje(ConstantesAplicacion.EXITOSO_SUSCRIPCION_ELIMINADA)
                 .objeto(null)
                 .build();
     }
