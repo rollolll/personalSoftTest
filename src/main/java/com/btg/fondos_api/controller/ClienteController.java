@@ -1,6 +1,7 @@
 package com.btg.fondos_api.controller;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
+import com.btg.fondos_api.dto.ClienteDto;
 import com.btg.fondos_api.service.IClienteService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Clase que implementa los servicios REST de consultar, actualizar y eliminar clientes
@@ -24,8 +27,8 @@ public class ClienteController {
         this.iClienteService = iClienteService;
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponseDto> obtenerTodos() {
-        return new ResponseEntity<>(this.iClienteService.obtenerClientes(), HttpStatus.OK);
+    @GetMapping(ConstantesAplicacion.PATH_OBTENER_CLIENTE)
+    public ResponseEntity<ApiResponseDto<List<ClienteDto>>> obtenerTodos() {
+        return ResponseEntity.ok(this.iClienteService.obtenerClientes());
     }
 }

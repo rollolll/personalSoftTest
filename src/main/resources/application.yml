@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: fondos-api
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/BTG
+
+  security:
+    user:
+      name: root
+      password: 123
+
+key-jwt: 586E3272357538782F413F4428472B4B6250655368566B597033733676397924

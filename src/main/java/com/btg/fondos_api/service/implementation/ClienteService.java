@@ -2,10 +2,12 @@ package com.btg.fondos_api.service.implementation;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.exception.RecursoNoEncontradoException;
 import com.btg.fondos_api.mapper.ClienteMapper;
 import com.btg.fondos_api.persistence.model.ClienteModel;
 import com.btg.fondos_api.persistence.repository.ClienteRepository;
 import com.btg.fondos_api.service.IClienteService;
+import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import com.btg.fondos_api.utilities.ECodResultadoApiResponse;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class ClienteService implements IClienteService {
     @Override
     public ApiResponseDto obtenerClientes() {
         List<ClienteModel> clientes = clienteRepository.findAll();
+        if (clientes.isEmpty()){
+            throw new RecursoNoEncontradoException(ConstantesAplicacion.ERROR_NO_SE_ENCUENTRAN_CLIENTES);
+        }
         List<ClienteDto> clienteMap = clienteMapper.toDtoList(clientes);
         return ApiResponseDto.builder()
                 .error(false)
