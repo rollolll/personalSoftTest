@@ -8,7 +8,7 @@ import com.btg.fondos_api.persistence.model.ClienteModel;
 import com.btg.fondos_api.persistence.repository.ClienteRepository;
 import com.btg.fondos_api.service.IClienteService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
-import com.btg.fondos_api.utilities.ECodResultadoApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class ClienteService implements IClienteService {
         List<ClienteDto> clienteMap = clienteMapper.toDtoList(clientes);
         return ApiResponseDto.builder()
                 .error(false)
-                .codigoResultado(ECodResultadoApiResponse.OK.getCodigo())
+                .codigoResultado(HttpStatus.OK.value())
                 .objeto(clienteMap)
                 .build();
     }

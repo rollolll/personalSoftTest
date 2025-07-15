@@ -4,7 +4,6 @@ import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.ClienteDto;
 import com.btg.fondos_api.service.IClienteService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

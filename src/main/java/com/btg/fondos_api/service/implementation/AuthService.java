@@ -2,9 +2,9 @@ package com.btg.fondos_api.service.implementation;
 
 import com.btg.fondos_api.config.jwt.JwtService;
 import com.btg.fondos_api.dto.AuthResponse;
+import com.btg.fondos_api.dto.DetallesAutUsuariosDto;
 import com.btg.fondos_api.dto.LoginRequest;
 import com.btg.fondos_api.dto.RegistrarRequest;
-import com.btg.fondos_api.dto.DetallesAutUsuariosDto;
 import com.btg.fondos_api.exception.RecursoYaExistenteException;
 import com.btg.fondos_api.persistence.model.UsuarioModel;
 import com.btg.fondos_api.persistence.repository.UsuarioRepository;

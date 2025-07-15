@@ -2,12 +2,11 @@ package com.btg.fondos_api.controller;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.FondoDto;
+import com.btg.fondos_api.dto.SuscribirFondoRequest;
 import com.btg.fondos_api.service.IFondoService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,10 @@ public class FondoController {
     @GetMapping(ConstantesAplicacion.PATH_OBTENER_FONDOS)
     public ResponseEntity<ApiResponseDto<List<FondoDto>>> obtenerTodos() {
         return ResponseEntity.ok(this.iFondoService.obtenerFondos());
+    }
+
+    @PostMapping(ConstantesAplicacion.PATH_SUSCRIBIR_FONDO)
+    public ResponseEntity<ApiResponseDto> suscribirFondo(@RequestBody SuscribirFondoRequest fondo) throws Exception {
+        return ResponseEntity.ok(this.iFondoService.suscribirFondo(fondo));
     }
 }

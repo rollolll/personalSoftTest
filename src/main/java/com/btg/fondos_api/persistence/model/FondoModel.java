@@ -18,6 +18,6 @@ public class FondoModel {
     @Id
     private String id;
     private String nombre;
-    private String montoMinimo;
+    private BigDecimal montoMinimo;
     private String categoria;
 }
