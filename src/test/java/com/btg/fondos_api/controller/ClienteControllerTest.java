@@ -1,7 +1,7 @@
 package com.btg.fondos_api.controller;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
-import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 import com.btg.fondos_api.service.IClienteService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ClienteControllerTest {
 
     @Test
     void testObtenerTodos() {
-        ApiResponseDto<List<ClienteDto>> apiResponseDto = ApiResponseDto.<List<ClienteDto>>builder()
+        ApiResponseDto<List<ClienteRequest>> apiResponseDto = ApiResponseDto.<List<ClienteRequest>>builder()
                 .error(false)
                 .codigoResultado(200)
                 .mensaje("Consulta exitosa")
@@ -37,7 +37,7 @@ class ClienteControllerTest {
 
         when(mockIClienteService.obtenerClientes()).thenReturn(apiResponseDto);
 
-        ResponseEntity<ApiResponseDto<List<ClienteDto>>> response =
+        ResponseEntity<ApiResponseDto<List<ClienteRequest>>> response =
                 clienteController.obtenerTodos();
 
         Assertions.assertNotNull(response);
@@ -48,7 +48,7 @@ class ClienteControllerTest {
     void testCrearCliente() {
 
         ResponseEntity<ApiResponseDto> response =
-                clienteController.crearCliente(new ClienteDto());
+                clienteController.crearCliente(new ClienteRequest());
 
         Assertions.assertNotNull(response);
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());

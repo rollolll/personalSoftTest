@@ -1,7 +1,7 @@
 package com.btg.fondos_api.service.implementation;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
-import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 import com.btg.fondos_api.exception.RecursoNoEncontradoException;
 import com.btg.fondos_api.mapper.ClienteMapper;
 import com.btg.fondos_api.persistence.model.ClienteModel;
@@ -50,9 +50,9 @@ class ClienteServiceTest {
         final List<ClienteModel> clienteModels = List.of(clienteModel);
         when(mockClienteRepository.findAll()).thenReturn(clienteModels);
 
-        final List<ClienteDto> clienteDtos = List.of(
-                new ClienteDto("nombre", "documento", "email@email.com", "232154", "SMS"));
-        when(mockClienteMapper.toDtoList(anyList())).thenReturn(clienteDtos);
+        final List<ClienteRequest> clienteRequests = List.of(
+                new ClienteRequest("nombre", "documento", "email@email.com", "232154", "SMS"));
+        when(mockClienteMapper.toDtoList(anyList())).thenReturn(clienteRequests);
 
         final ApiResponseDto result = clienteServiceUnderTest.obtenerClientes();
         assertNotNull(result);
@@ -68,7 +68,7 @@ class ClienteServiceTest {
 
     @Test
     void testCrearCliente() {
-        final ClienteDto cliente = new ClienteDto("nombre", "documento", "email", "telefono",
+        final ClienteRequest cliente = new ClienteRequest("nombre", "documento", "email", "telefono",
                 "preferenciaNotificacion");
 
         final ClienteModel clienteModel = new ClienteModel();
@@ -77,7 +77,7 @@ class ClienteServiceTest {
         clienteModel.setEmail("email");
         clienteModel.setTelefono("telefono");
         clienteModel.setSaldo(new BigDecimal("0.00"));
-        when(mockClienteMapper.toModel(any(ClienteDto.class))).thenReturn(clienteModel);
+        when(mockClienteMapper.toModel(any(ClienteRequest.class))).thenReturn(clienteModel);
 
         final ApiResponseDto result = clienteServiceUnderTest.crearCliente(cliente);
 

@@ -2,6 +2,7 @@ package com.btg.fondos_api.service.implementation;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
 import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 import com.btg.fondos_api.exception.ErrorGenericoException;
 import com.btg.fondos_api.exception.RecursoNoEncontradoException;
 import com.btg.fondos_api.mapper.ClienteMapper;
@@ -32,7 +33,7 @@ public class ClienteService implements IClienteService {
         if (clientes.isEmpty()) {
             throw new RecursoNoEncontradoException(ConstantesAplicacion.ERROR_NO_SE_ENCUENTRAN_CLIENTES);
         }
-        List<ClienteDto> clienteMap = clienteMapper.toDtoList(clientes);
+        List<ClienteRequest> clienteMap = clienteMapper.toDtoList(clientes);
         return ApiResponseDto.builder()
                 .error(false)
                 .codigoResultado(HttpStatus.OK.value())
@@ -41,15 +42,16 @@ public class ClienteService implements IClienteService {
     }
 
     @Override
-    public ApiResponseDto crearCliente(ClienteDto cliente) {
+    public ApiResponseDto crearCliente(ClienteRequest cliente) {
         try {
             ClienteModel model = clienteMapper.toModel(cliente);
             model.setSaldo(BigDecimal.valueOf(500000));
-            clienteRepository.save(model);
+            model = clienteRepository.save(model);
             return ApiResponseDto.builder()
                     .error(false)
                     .codigoResultado(HttpStatus.OK.value())
                     .mensaje(ConstantesAplicacion.EXITOSO_CLIENTE)
+                    .objeto(ClienteDto.builder().idCliente(model.getId()).build())
                     .build();
         } catch (ErrorGenericoException e) {
             throw new ErrorGenericoException(ConstantesAplicacion.ERROR_CREAR_CLIENTE);

@@ -55,3 +55,8 @@ eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290Iiw...
 3. Haz clic en **"Authorize"** y luego en **"Close"**.
 
 Una vez autorizado correctamente, podrás consumir todos los endpoints protegidos de la API según los roles asignados.
+
+### 4️⃣ URL de despliegue en AWS
+
+- 🔗 **Swagger UI**  
+  http://34.207.146.54:8080/swagger-ui/index.html

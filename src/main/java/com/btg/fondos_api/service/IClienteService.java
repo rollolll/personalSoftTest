@@ -1,7 +1,7 @@
 package com.btg.fondos_api.service;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
-import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 
 /**
  * Interfaz con todos los métodos disponibles de clientes
@@ -10,5 +10,5 @@ import com.btg.fondos_api.dto.ClienteDto;
 public interface IClienteService {
 
     ApiResponseDto obtenerClientes();
-    ApiResponseDto crearCliente(ClienteDto cliente);
+    ApiResponseDto crearCliente(ClienteRequest cliente);
 }

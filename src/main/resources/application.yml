@@ -6,5 +6,5 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/BTG
 
-key-jwt: ${KEY_JWT:default-jwt-key}
+key-jwt: ${KEY_JWT:586E3272357538782F413F4428472B4B6250655368566B597033733676397924}
 swagger-access: ${SWAGGER_ACCESS:http://localhost:8080}

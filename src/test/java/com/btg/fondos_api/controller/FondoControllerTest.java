@@ -1,7 +1,7 @@
 package com.btg.fondos_api.controller;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
-import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 import com.btg.fondos_api.dto.FondoDto;
 import com.btg.fondos_api.dto.SuscribirFondoRequest;
 import com.btg.fondos_api.service.IFondoService;
@@ -31,7 +31,7 @@ class FondoControllerTest {
 
     @Test
     void testObtenerFondos() {
-        ApiResponseDto<List<ClienteDto>> apiResponseDto = ApiResponseDto.<List<ClienteDto>>builder()
+        ApiResponseDto<List<ClienteRequest>> apiResponseDto = ApiResponseDto.<List<ClienteRequest>>builder()
                 .error(false)
                 .codigoResultado(200)
                 .mensaje("Consulta exitosa")

@@ -1,7 +1,7 @@
 package com.btg.fondos_api.controller;
 
 import com.btg.fondos_api.dto.ApiResponseDto;
-import com.btg.fondos_api.dto.ClienteDto;
+import com.btg.fondos_api.dto.ClienteRequest;
 import com.btg.fondos_api.service.IClienteService;
 import com.btg.fondos_api.utilities.ConstantesAplicacion;
 import jakarta.validation.Valid;
@@ -26,12 +26,12 @@ public class ClienteController {
     }
 
     @GetMapping(ConstantesAplicacion.PATH_OBTENER_CLIENTE)
-    public ResponseEntity<ApiResponseDto<List<ClienteDto>>> obtenerTodos() {
+    public ResponseEntity<ApiResponseDto<List<ClienteRequest>>> obtenerTodos() {
         return ResponseEntity.ok(this.iClienteService.obtenerClientes());
     }
 
     @PostMapping(ConstantesAplicacion.PATH_CREAR_CLIENTE)
-    public ResponseEntity<ApiResponseDto> crearCliente(@Valid @RequestBody ClienteDto cliente) {
+    public ResponseEntity<ApiResponseDto> crearCliente(@Valid @RequestBody ClienteRequest cliente) {
         return ResponseEntity.ok(this.iClienteService.crearCliente(cliente));
     }
 }
