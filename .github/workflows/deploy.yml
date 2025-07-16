@@ -32,7 +32,7 @@ jobs:
           source: target/*.jar
           target: /home/ubuntu/
 
-      - name: Restart app on EC2
+      - name: Restart app on EC2 with Secrets Env
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -40,7 +40,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Deteniendo proceso anterior (si existe)..."
-
             if [ -f /home/ubuntu/app.pid ]; then
               PID=$(cat /home/ubuntu/app.pid)
               if ps -p $PID > /dev/null; then
@@ -59,7 +58,14 @@ jobs:
             JAR_FILE=$(find /home/ubuntu -name "*.jar" -not -name "app.jar" | head -n 1)
             mv "$JAR_FILE" /home/ubuntu/app.jar
 
-            echo "Iniciando nueva instancia..."
-            nohup java -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
+            echo "Instalando jq si no está presente..."
+            sudo apt-get update -y && sudo apt-get install -y jq
+
+            echo "Obteniendo secretos desde Secrets Manager..."
+            SECRET_JSON=$(aws secretsmanager get-secret-value --region us-east-1 --secret-id app-secret --query 'SecretString' --output text)
+            export SWAGGER_ACCESS=$(echo "$SECRET_JSON" | jq -r '.["swagger-access"]')
+            export KEY_JWT=$(echo "$SECRET_JSON" | jq -r '.["key-jwt"]')
+
+            echo "Iniciando app con SWAGGER_ACCESS=$SWAGGER_ACCESS"
+            nohup env SWAGGER_ACCESS=$SWAGGER_ACCESS KEY_JWT=$KEY_JWT java -jar /home/ubuntu/app.jar > /home/ubuntu/app.log 2>&1 &
             echo $! > /home/ubuntu/app.pid
-            echo "App iniciada en segundo plano con PID $(cat /home/ubuntu/app.pid)"

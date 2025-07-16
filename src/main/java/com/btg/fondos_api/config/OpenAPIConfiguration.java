@@ -10,16 +10,20 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
 @Configuration
 public class OpenAPIConfiguration {
 
+    @Value("${swagger-access}")
+    private String swaggerAccess;
+
     @Bean
     public OpenAPI defineOpenApi() {
         Server server = new Server();
-        server.setUrl("http://localhost:8080");
+        server.setUrl(swaggerAccess);
         server.setDescription("Development");
 
         return new OpenAPI().addSecurityItem(new SecurityRequirement().
