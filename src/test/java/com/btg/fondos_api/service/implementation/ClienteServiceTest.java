@@ -78,6 +78,7 @@ class ClienteServiceTest {
         clienteModel.setTelefono("telefono");
         clienteModel.setSaldo(new BigDecimal("0.00"));
         when(mockClienteMapper.toModel(any(ClienteRequest.class))).thenReturn(clienteModel);
+        when(mockClienteRepository.save(clienteModel)).thenReturn(clienteModel);
 
         final ApiResponseDto result = clienteServiceUnderTest.crearCliente(cliente);
 
