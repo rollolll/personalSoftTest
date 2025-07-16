@@ -56,7 +56,7 @@ jobs:
             fi
 
             echo "Renombrando jar subido a app.jar"
-            JAR_FILE=$(ls /home/ubuntu/*.jar | grep -v app.jar | head -n 1)
+            JAR_FILE=$(find /home/ubuntu -name "*.jar" -not -name "app.jar" | head -n 1)
             mv "$JAR_FILE" /home/ubuntu/app.jar
 
             echo "Iniciando nueva instancia..."
